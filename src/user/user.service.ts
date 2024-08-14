@@ -3,12 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schema/user.schema';
 import { Model } from 'mongoose';
 import { MailService } from 'src/mail/mail.service';
+import { PaymentService } from 'src/payment/payment.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private readonly mailService: MailService,
+    private readonly paymentService: PaymentService,
   ) {}
   async createUser<T>(data: T) {
     let user: User;
@@ -17,19 +19,17 @@ export class UserService {
     } catch (error) {
       throw new BadRequestException('User already exists', { cause: error });
     }
-    try {
-      await this.mailService.sendMail({
-        to: user.email,
-        subject: 'NEXUS 2024: Registration Successful',
-        template: 'registration',
-        context: {
-          firstName: user.firstName,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-      throw new BadRequestException('Unable to send mail');
-    }
+    await this.mailService.sendMail({
+      to: user.email,
+      subject: 'NEXUS 2024: Registration Successful',
+      template: 'registration',
+      context: {
+        firstName: user.firstName,
+      },
+    });
+
+    await this.paymentService.createPayment({ email: user.email });
+
     return user;
   }
 

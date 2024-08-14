@@ -16,7 +16,7 @@ export class MailService {
         context,
       });
     } catch (error) {
-      throw new BadRequestException(error);
+      throw new BadRequestException('Unable to send mail', { cause: error });
     }
   }
 }
