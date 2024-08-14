@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
+import { v4 } from 'uuid';
 
 @Injectable()
 export class PaymentService {
@@ -9,6 +10,7 @@ export class PaymentService {
   async createPayment(createPaymentDto: CreatePaymentDto) {
     let transaction;
     try {
+      const tx_ref = v4();
       transaction = await axios.post(
         `
         ${this.configService.get<string>('paymentApiUrl')}/transaction/initiate`,
@@ -16,6 +18,9 @@ export class PaymentService {
           email: createPaymentDto.email,
           amount: 1000 * 100,
           currency: 'NGN',
+          initiate_type: 'inline',
+          transaction_ref: tx_ref,
+          callback_url: `https://nexus-2024.vercel.app/dashboard/verify-trx/${tx_ref}`,
         },
         {
           headers: {
@@ -24,11 +29,14 @@ export class PaymentService {
           },
         },
       );
-      return transaction?.data?.checkout_url;
+      return transaction;
     } catch (error) {
-      throw new BadRequestException('Unable to initialize payment', {
-        cause: error,
-      });
+      throw new BadRequestException(
+        'Unable to initialize payment transaction',
+        {
+          cause: error,
+        },
+      );
     }
   }
 
