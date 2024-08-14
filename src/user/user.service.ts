@@ -28,9 +28,10 @@ export class UserService {
       },
     });
 
-    await this.paymentService.createPayment({ email: user.email });
-
-    return user;
+    const checkout_url = await this.paymentService.createPayment({
+      email: user.email,
+    });
+    return checkout_url;
   }
 
   findUsers() {

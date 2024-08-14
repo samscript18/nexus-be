@@ -24,7 +24,7 @@ export class PaymentService {
           },
         },
       );
-      return transaction?.data?.transaction_ref;
+      return transaction?.data?.checkout_url;
     } catch (error) {
       throw new BadRequestException('Unable to initialize payment', {
         cause: error,
