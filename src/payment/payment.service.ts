@@ -14,7 +14,7 @@ export class PaymentService {
         `${this.configService.get<string>('paymentApiUrl')}/transaction/initiate`,
         {
           email: createPaymentDto.email,
-          amount: 1000 * 100,
+          amount: 1010 * 100,
           currency: 'NGN',
           initiate_type: 'inline',
           transaction_ref: tx_ref,
@@ -39,9 +39,8 @@ export class PaymentService {
   }
 
   async verifyPayment(transaction_ref: string) {
-    let transaction;
     try {
-      transaction = await axios.get(
+      const transaction = await axios.get(
         `
         ${this.configService.get<string>('paymentApiUrl')}/transaction/verify/${transaction_ref}`,
         {
@@ -51,7 +50,7 @@ export class PaymentService {
           },
         },
       );
-      return transaction;
+      return transaction?.data;
     } catch (error) {
       throw new BadRequestException('Unable to verify payment', {
         cause: error,
