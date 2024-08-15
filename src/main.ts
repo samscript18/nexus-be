@@ -9,8 +9,8 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const allowedOrigins = [
-    'https://nexus-2024.vercel.app',
     'http://localhost:3000',
+    'https://nexus-2024.vercel.app',
   ];
 
   app.use(express.json({ limit: '30mb' }));
