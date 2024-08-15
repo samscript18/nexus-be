@@ -8,12 +8,10 @@ import { v4 } from 'uuid';
 export class PaymentService {
   constructor(private readonly configService: ConfigService) {}
   async createPayment(createPaymentDto: CreatePaymentDto) {
-    let transaction;
     try {
       const tx_ref = v4();
-      transaction = await axios.post(
-        `
-        ${this.configService.get<string>('paymentApiUrl')}/transaction/initiate`,
+      const transaction = await axios.post(
+        `${this.configService.get<string>('paymentApiUrl')}/transaction/initiate`,
         {
           email: createPaymentDto.email,
           amount: 1000 * 100,
@@ -29,7 +27,7 @@ export class PaymentService {
           },
         },
       );
-      return transaction;
+      return transaction?.data;
     } catch (error) {
       throw new BadRequestException(
         'Unable to initialize payment transaction',
