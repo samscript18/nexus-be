@@ -14,7 +14,7 @@ export class PaymentService {
         `${this.configService.get<string>('paymentApiUrl')}/transaction/initiate`,
         {
           email: createPaymentDto.email,
-          amount: 1010 * 100,
+          amount: 1011 * 100,
           currency: 'NGN',
           initiate_type: 'inline',
           transaction_ref: tx_ref,
