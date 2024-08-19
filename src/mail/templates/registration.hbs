@@ -15,15 +15,18 @@
       color:#004080; } .container { width: 100%; max-width: 700px; margin: 0
       auto; } .main { background: #ffffff; padding-bottom: 90px; border-radius:
       6px; padding: 1rem 1rem 2rem; } .main h1 { text-align: center; font-size:
-      26px; line-height: 36.5px; padding-bottom: 50px; font-weight: bold; color:
-      #004080; } .footer { text-align: center; padding-bottom: 100px;
-      padding-top: 40px; } .footer img { width: 34px; height: 34px; } p{ margin:
-      1rem 0; } .main .cap {text-transform: capitalize;}
+      26px; line-height: 36.5px; padding-bottom: 30px; font-weight: bold; color:
+      #004080; } .header { width: 100%; display: flex; justify-content: center;
+      align-items: center; padding-bottom: 20px;} .header img { max-width: 60%;
+      object-fit: contain; display: block; } .footer { text-align: center;
+      padding-bottom: 100px; padding-top: 40px; } .footer img { width: 34px;
+      height: 34px; } p{ margin: 1rem 0; } .main .cap {text-transform:
+      capitalize;}
 
     </style>
   </head>
   <body>
-    <div class='main-container'>
+    <div class='main-container' style='font-family: Poppins, sans-serif;'>
       <div class='container'>
         <!-- Email header -->
 
@@ -31,6 +34,13 @@
         <div class='main'>
           <!-- Heading -->
           <h1>Welcome to NEXUS 2024 - Registration Successful</h1>
+
+          <div class='header'>
+            <img
+              src='https://res.cloudinary.com/dynopc0cn/image/upload/v1724053540/mailImg_hvohcl.jpg'
+              alt='NEXUS Speakers image'
+            />
+          </div>
 
           <p>Dear <strong class='cap'>{{firstName}}</strong>,</p>
 
