@@ -29,6 +29,8 @@ export class PaymentService {
       );
       return transaction?.data;
     } catch (error) {
+      console.log(error);
+
       throw new BadRequestException(
         'Unable to initialize payment transaction',
         {
