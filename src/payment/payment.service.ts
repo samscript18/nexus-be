@@ -1,12 +1,24 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { v4 } from 'uuid';
+import { MailService } from 'src/mail/mail.service';
+import { InjectModel } from '@nestjs/mongoose';
+import { User, UserDocument } from 'src/user/schema/user.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class PaymentService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly mailService: MailService,
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+  ) {}
   async createPayment(createPaymentDto: CreatePaymentDto) {
     try {
       const tx_ref = v4();
@@ -52,6 +64,25 @@ export class PaymentService {
           },
         },
       );
+
+      const user: User = await this.userModel.findOne({
+        email: transaction?.data?.data?.email,
+      });
+      if (!user) {
+        throw new NotFoundException('User Not found');
+      }
+
+      if (transaction?.data?.data?.transaction_status === 'success') {
+        await this.mailService.sendMail({
+          to: user.email,
+          subject: 'NEXUS 2024: Registration Successful',
+          template: 'registration',
+          context: {
+            firstName: user.firstName,
+          },
+        });
+      }
+
       return transaction?.data;
     } catch (error) {
       throw new BadRequestException('Unable to verify payment', {
