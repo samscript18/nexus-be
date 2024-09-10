@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus-be-deployment
+  labels:
+    app: nexus-be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nexus-be
+  template:
+    metadata:
+      labels:
+        app: nexus-be
+    spec:
+      containers:
+        - name: nexus-be
+          image: samscript/nexus-be:1.0
+          ports:
+            - containerPort: 4000
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: nexus-be-secret
+                  key: nexus-be-database-url
+            - name: MAILER_USER
+              valueFrom:
+                secretKeyRef:
+                  name: nexus-be-secret
+                  key: nexus-be-mailer-user
+            - name: MAILER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nexus-be-secret
+                  key: nexus-be-mailer-password
+            - name: PAYMENT_API_URL
+              valueFrom:
+                secretKeyRef:
+                  name: nexus-be-secret
+                  key: nexus-be-payment-url
+            - name: PAYMENT_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: nexus-be-secret
+                  key: nexus-be-payment-key
