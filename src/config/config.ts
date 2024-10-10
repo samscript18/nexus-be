@@ -5,4 +5,6 @@ export default () => ({
   mailerPassword: process.env.MAILER_PASSWORD,
   paymentApiUrl: process.env.PAYMENT_API_URL,
   paymentApiKey: process.env.PAYMENT_API_KEY,
+  testPaymentApiUrl: process.env.TEST_PAYMENT_API_URL,
+  testPaymentApiKey: process.env.TEST_PAYMENT_API_KEY,
 });

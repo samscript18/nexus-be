@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreatePaymentDto } from './dto/create-payment.dto';
+import { InitiatePaymentDto } from './dto/initiate-payment.dto';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { v4 } from 'uuid';
@@ -11,21 +11,30 @@ import { MailService } from 'src/mail/mail.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from 'src/user/schema/user.schema';
 import { Model } from 'mongoose';
+import { CreatePaymentDto } from './dto/create-payment-dto';
+import { Payment, PaymentDocument } from './schema/payment.schema';
 
 @Injectable()
 export class PaymentService {
   constructor(
     private readonly configService: ConfigService,
     private readonly mailService: MailService,
-    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    @InjectModel(User.name, Payment.name)
+    private readonly userModel: Model<UserDocument>,
+    private readonly paymentModel: Model<PaymentDocument>,
   ) {}
   async createPayment(createPaymentDto: CreatePaymentDto) {
+    const payment: Payment = await this.paymentModel.create(createPaymentDto);
+    return payment;
+  }
+
+  async initiatePayment(initiatePaymentDto: InitiatePaymentDto) {
     try {
       const tx_ref = v4();
       const transaction = await axios.post(
-        `${this.configService.get<string>('paymentApiUrl')}/transaction/initiate`,
+        `${this.configService.get<string>('testPaymentApiUrl')}/transaction/initiate`,
         {
-          email: createPaymentDto.email,
+          email: initiatePaymentDto.email,
           amount: 1011 * 100,
           currency: 'NGN',
           initiate_type: 'inline',
@@ -34,7 +43,7 @@ export class PaymentService {
         },
         {
           headers: {
-            Authorization: `Bearer ${this.configService.get<string>('paymentApiKey')}`,
+            Authorization: `Bearer ${this.configService.get<string>('testPaymentApiKey')}`,
             'Content-Type': 'application/json',
           },
         },

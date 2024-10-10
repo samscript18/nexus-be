@@ -16,12 +16,11 @@ export class UserService {
     try {
       user = await this.userModel.create(data);
     } catch (error) {
-      // throw new BadRequestException('User already exists', { cause: error });
       await this.userModel.findOneAndDelete({ email: data.email });
       user = await this.userModel.create(data);
     }
 
-    const transaction = await this.paymentService.createPayment({
+    const transaction = await this.paymentService.initiatePayment({
       email: user.email,
     });
     return transaction?.data.checkout_url;

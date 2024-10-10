@@ -4,6 +4,7 @@ import { PaymentController } from './payment.controller';
 import { MailService } from 'src/mail/mail.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/user/schema/user.schema';
+import { Payment, PaymentSchema } from './schema/payment.schema';
 
 @Module({
   imports: [
@@ -11,6 +12,10 @@ import { User, UserSchema } from 'src/user/schema/user.schema';
       {
         name: User.name,
         schema: UserSchema,
+      },
+      {
+        name: Payment.name,
+        schema: PaymentSchema,
       },
     ]),
   ],
