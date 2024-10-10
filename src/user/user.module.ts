@@ -5,9 +5,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schema/user.schema';
 import { MailService } from 'src/mail/mail.service';
 import { PaymentService } from 'src/payment/payment.service';
+import { PaymentModule } from 'src/payment/payment.module';
 
 @Module({
   imports: [
+    PaymentModule,
     MongooseModule.forFeature([
       {
         name: User.name,
