@@ -19,8 +19,9 @@ export class PaymentService {
   constructor(
     private readonly configService: ConfigService,
     private readonly mailService: MailService,
-    @InjectModel(User.name, Payment.name)
+    @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
+    @InjectModel(Payment.name)
     private readonly paymentModel: Model<PaymentDocument>,
   ) {}
   async createPayment(createPaymentDto: CreatePaymentDto) {
