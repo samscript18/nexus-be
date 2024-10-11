@@ -86,6 +86,13 @@ export class PaymentService {
       }
 
       if (transaction?.data?.data?.transaction_status === 'success') {
+        await this.paymentModel.create({
+          tx_amount: transaction?.data?.data?.transaction_amount,
+          tx_ref: transaction?.data?.data?.transaction_ref,
+          tx_status: transaction?.data?.data?.transaction_status,
+          email: transaction?.data?.data?.email,
+          currency: transaction?.data?.data?.transaction_currency_id,
+        });
         await this.mailService.sendMail({
           to: user.email,
           subject: 'NEXUS 2024: Registration Successful',
@@ -98,6 +105,7 @@ export class PaymentService {
 
       return transaction?.data;
     } catch (error) {
+      console.log(error);
       throw new BadRequestException('Unable to verify payment', {
         cause: error,
       });
