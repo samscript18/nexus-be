@@ -6,6 +6,7 @@ import { User, UserSchema } from './schema/user.schema';
 import { MailService } from 'src/mail/mail.service';
 import { PaymentService } from 'src/payment/payment.service';
 import { PaymentModule } from 'src/payment/payment.module';
+import { Payment, PaymentSchema } from 'src/payment/schema/payment.schema';
 
 @Module({
   imports: [
@@ -14,6 +15,10 @@ import { PaymentModule } from 'src/payment/payment.module';
       {
         name: User.name,
         schema: UserSchema,
+      },
+      {
+        name: Payment.name,
+        schema: PaymentSchema,
       },
     ]),
   ],

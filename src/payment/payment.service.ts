@@ -17,16 +17,19 @@ import { Payment, PaymentDocument } from './schema/payment.schema';
 @Injectable()
 export class PaymentService {
   constructor(
-    private readonly configService: ConfigService,
-    private readonly mailService: MailService,
-    @InjectModel(User.name)
-    private readonly userModel: Model<UserDocument>,
     @InjectModel(Payment.name)
     private readonly paymentModel: Model<PaymentDocument>,
+    private readonly configService: ConfigService,
+    private readonly mailService: MailService,
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) {}
   async createPayment(createPaymentDto: CreatePaymentDto) {
     const payment: Payment = await this.paymentModel.create(createPaymentDto);
     return payment;
+  }
+
+  getAllPayments() {
+    return this.paymentModel.find();
   }
 
   async initiatePayment(initiatePaymentDto: InitiatePaymentDto) {
@@ -66,10 +69,10 @@ export class PaymentService {
     try {
       const transaction = await axios.get(
         `
-        ${this.configService.get<string>('paymentApiUrl')}/transaction/verify/${transaction_ref}`,
+        ${this.configService.get<string>('testPaymentApiUrl')}/transaction/verify/${transaction_ref}`,
         {
           headers: {
-            Authorization: `Bearer ${this.configService.get<string>('paymentApiKey')}`,
+            Authorization: `Bearer ${this.configService.get<string>('testPaymentApiKey')}`,
             'Content-Type': 'application/json',
           },
         },

@@ -10,16 +10,17 @@ import { Payment, PaymentSchema } from './schema/payment.schema';
   imports: [
     MongooseModule.forFeature([
       {
-        name: User.name,
-        schema: UserSchema,
-      },
-      {
         name: Payment.name,
         schema: PaymentSchema,
+      },
+      {
+        name: User.name,
+        schema: UserSchema,
       },
     ]),
   ],
   controllers: [PaymentController],
   providers: [PaymentService, MailService],
+  exports: [PaymentService],
 })
 export class PaymentModule {}
