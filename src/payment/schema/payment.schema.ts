@@ -12,7 +12,7 @@ export class Payment {
   @Prop({ required: true })
   tx_status: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   email: string;
 
   @Prop({ required: true })
