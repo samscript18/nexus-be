@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schema/user.schema';
 import { Model } from 'mongoose';
@@ -16,8 +16,7 @@ export class UserService {
     try {
       user = await this.userModel.create(data);
     } catch (error) {
-      await this.userModel.findOneAndDelete({ email: data.email });
-      user = await this.userModel.create(data);
+      throw new BadRequestException('User already exists');
     }
 
     const transaction = await this.paymentService.initiatePayment({
