@@ -86,13 +86,18 @@ export class PaymentService {
       }
 
       if (transaction?.data?.data?.transaction_status === 'success') {
-        await this.paymentModel.create({
-          tx_amount: transaction?.data?.data?.transaction_amount,
-          tx_ref: transaction?.data?.data?.transaction_ref,
-          tx_status: transaction?.data?.data?.transaction_status,
+        const payment = this.paymentModel.findOne({
           email: transaction?.data?.data?.email,
-          currency: transaction?.data?.data?.transaction_currency_id,
         });
+        if (!payment) {
+          await this.paymentModel.create({
+            tx_amount: transaction?.data?.data?.transaction_amount,
+            tx_ref: transaction?.data?.data?.transaction_ref,
+            tx_status: transaction?.data?.data?.transaction_status,
+            email: transaction?.data?.data?.email,
+            currency: transaction?.data?.data?.transaction_currency_id,
+          });
+        }
         await this.mailService.sendMail({
           to: user.email,
           subject: 'NEXUS 2024: Registration Successful',
